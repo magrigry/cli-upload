@@ -1,0 +1,28 @@
+### Create
+PUT http://localhost:8000/exemple.file
+Content-Type: text/html
+
+MyContentSent
+
+> {%
+    client.global.set('endpoint', response.body)
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.startsWith('http://localhost:8000'))
+    });
+%}
+
+### Download
+
+GET {{endpoint}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body === 'MyContentSent')
+    });
+%}
+
+### Delete
+
+DELETE {{endpoint}}
