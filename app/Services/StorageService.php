@@ -100,7 +100,7 @@ class StorageService
         $unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
         $size = preg_replace('/\D/', '', $size);
 
-        if($unit) {
+        if ($unit) {
             return (int) floor($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
         }
 

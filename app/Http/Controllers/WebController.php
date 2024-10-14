@@ -26,7 +26,7 @@ class WebController
         return view('index', [
             'host' => $request->getHost(),
             'uploads' => $uploads,
-            'maxSize' => $storageService->getMaxFileSize()->format()
+            'maxSize' => $storageService->getMaxFileSize()->format(),
         ]);
     }
 
