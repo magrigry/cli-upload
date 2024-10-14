@@ -127,7 +127,7 @@
         <p>Limitations</p>
         <ul>
             <li>Expire after 1 hour</li>
-            <li>1Go max</li>
+            <li>Max file size : {{ $maxSize }}</li>
             <li>Use your own encryption</li>
         </ul>
 

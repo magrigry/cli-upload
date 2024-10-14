@@ -15,7 +15,7 @@ use Webmozart\Assert\Assert;
 
 class WebController
 {
-    public function home(Request $request): View|Factory|Application
+    public function home(Request $request, StorageService $storageService): View|Factory|Application
     {
         $uploads = Upload::query()
             ->where('session_id', '=', $request->session()->getId())
@@ -26,6 +26,7 @@ class WebController
         return view('index', [
             'host' => $request->getHost(),
             'uploads' => $uploads,
+            'maxSize' => $storageService->getMaxFileSize()->format()
         ]);
     }
 

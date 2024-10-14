@@ -20,7 +20,7 @@ class StorageService
     /**
      * @return System Size in bytes
      */
-    public function countStorageUsePerIp(string $ip): System
+    public function calculateStorageUsedPerIp(string $ip): System
     {
         $bytes = DB::table('uploads')
             ->where('ip_address', $ip)
@@ -28,6 +28,30 @@ class StorageService
             ->sum('size');
 
         return Binary::bytes($bytes);
+    }
+
+    public function calculateStorageUsed(): System
+    {
+        $bytes = DB::table('uploads')
+            ->where('deleted', false)
+            ->sum('size');
+
+        return Binary::bytes($bytes);
+    }
+
+    public function getMaxFileSize(): System
+    {
+        $maxFileSize = ini_get('upload_max_filesize');
+        $maxFileSize = Binary::bytes($this->parseIniSize($maxFileSize));
+
+        $maxPostSize = ini_get('post_max_size');
+        $maxPostSize = Binary::bytes($this->parseIniSize($maxPostSize));
+
+        if ($maxPostSize->isLessThan($maxFileSize)) {
+            return $maxPostSize;
+        }
+
+        return $maxFileSize;
     }
 
     /**
@@ -66,5 +90,20 @@ class StorageService
         Utils::copyToStream($content, $stream);
 
         return $stream;
+    }
+
+    /**
+     * From https://github.com/sbolch/max-upload-file-size/blob/main/MaxUploadFileSizeGetter.php
+     */
+    private function parseIniSize($size): int
+    {
+        $unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
+        $size = preg_replace('/\D/', '', $size);
+
+        if($unit) {
+            return (int) floor($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+        }
+
+        return (int) floor($size);
     }
 }
