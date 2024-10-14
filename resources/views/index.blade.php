@@ -162,8 +162,8 @@
         <details>
             <summary><small>Click to see details and non minified version</small></summary>
             <p>
-                A oneline bash command that use OpenSSL to encrypt your file and sending to {{ $host }}.
-                It generate a random 256 bits key using <code>$(openssl rand -hex 32)</code>,
+                A oneline bash command that use OpenSSL to encrypt your file and send it to {{ $host }}.
+                It generate a random 256 bits key (which is not send to the server) using <code>$(openssl rand -hex 32)</code>,
                 encrypt your file with the key using <code>OpenSSL</code> and  <code>aes-256-cbc</code>, then send it to the server.
                 The server answer with the download URL and the bash function generate the command to download the file and decrypt it.
                 Using
