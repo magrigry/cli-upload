@@ -15,6 +15,8 @@ RUN apk --update add \
 
 COPY --chown=www-data:www-data . /var/www/html
 
+RUN rm /var/www/html/.env
+
 COPY stubs/nginx /etc/nginx
 COPY stubs/php /usr/local/etc
 COPY stubs/supervisor /etc/supervisor
