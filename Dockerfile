@@ -15,6 +15,7 @@ RUN apk --update add \
 
 COPY --chown=www-data:www-data . /var/www/html
 
+RUN ls -la
 RUN rm /var/www/html/.env
 
 COPY stubs/nginx /etc/nginx
