@@ -59,7 +59,6 @@ RUN echo 'LOG_LEVEL=debug' >> .env
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN composer install --no-dev --optimize-autoloader
-RUN composer build-prod
 
 EXPOSE 8080
 
