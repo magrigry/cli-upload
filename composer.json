@@ -36,6 +36,7 @@
         "build-prod": [
             "php artisan vendor:publish --tag=assets",
             "php artisan optimize",
+            "php artisan config:clear",
             "php artisan config:cache",
             "php artisan event:cache",
             "php artisan route:cache",

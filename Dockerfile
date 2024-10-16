@@ -23,7 +23,6 @@ COPY --chown=www-data:www-data ./public /var/www/html/public
 COPY --chown=www-data:www-data ./resources /var/www/html/resources
 COPY --chown=www-data:www-data ./routes /var/www/html/routes
 COPY --chown=www-data:www-data ./tests /var/www/html/tests
-COPY --chown=www-data:www-data ./storage /var/www/html/storage
 COPY --chown=www-data:www-data \
         ./artisan \
         ./composer.json \
@@ -39,11 +38,11 @@ RUN chmod -R 755 /var/www/html/bootstrap/cache
 
 RUN mkdir -p /var/www/html/storage/app/private
 RUN mkdir -p /var/www/html/storage/app/public
-RUN mkdir -p /var/www/html/storage/app/framework/cache
-RUN mkdir -p /var/www/html/storage/app/framework/session
-RUN mkdir -p /var/www/html/storage/app/framework/testing
-RUN mkdir -p /var/www/html/storage/app/framework/views
-RUN mkdir -p /var/www/html/storage/app/framework/logs
+RUN mkdir -p /var/www/html/storage/framework/cache
+RUN mkdir -p /var/www/html/storage/framework/session
+RUN mkdir -p /var/www/html/storage/framework/testing
+RUN mkdir -p /var/www/html/storage/framework/views
+RUN mkdir -p /var/www/html/storage/logs
 
 RUN chown www-data:www-data -R /var/www/html/storage
 RUN chmod 755 -R /var/www/html/storage
@@ -53,6 +52,9 @@ COPY stubs/php /usr/local/etc
 COPY stubs/supervisor /etc/supervisor
 
 RUN mkdir -p /var/run/php
+
+RUN echo 'LOG_CHANNEL=stderr' >> .env
+RUN echo 'LOG_LEVEL=debug' >> .env
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
