@@ -23,7 +23,6 @@ COPY --chown=www-data:www-data ./public /var/www/html/public
 COPY --chown=www-data:www-data ./resources /var/www/html/resources
 COPY --chown=www-data:www-data ./routes /var/www/html/routes
 COPY --chown=www-data:www-data ./tests /var/www/html/tests
-COPY --chown=www-data:www-data ./vendor /var/www/html/vendor
 COPY --chown=www-data:www-data ./storage /var/www/html/storage
 COPY --chown=www-data:www-data \
         ./artisan \
