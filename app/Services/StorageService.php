@@ -89,8 +89,7 @@ class StorageService
             throw new InsufficientStorage('Max capacity per IP address reached');
         }
 
-        $resource = fopen($file->getRealPath(), 'r+'); // use r+ so the stream is seekable which is required for S3 based drivers
-        $stream = $file instanceof UploadedFile ? new Stream($resource) : $this->requestToStream($file);
+        $stream = $file instanceof UploadedFile ? Utils::streamFor($file->getRealPath()) : $this->requestToStream($file);
 
         if ($stream->getSize() === 0) {
             throw new EmptyFileException;
