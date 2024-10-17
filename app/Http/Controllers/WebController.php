@@ -27,6 +27,10 @@ class WebController
             'host' => $request->getHost(),
             'uploads' => $uploads,
             'maxSize' => $storageService->getMaxFileSize()->format(),
+            'maxCapacity' => $storageService->getMaximumCapacity()->format(),
+            'maxCapacityPerIP' => $storageService->getMaximumCapacityPerIp()->format(),
+            'usedCapacity' => $storageService->calculateStorageUsed()->format(),
+            'usedCapacityPerIP' => $storageService->calculateStorageUsedPerIp($request->ip())->format(),
         ]);
     }
 

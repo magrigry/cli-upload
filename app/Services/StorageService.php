@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Exceptions\EmptyFileException;
+use App\Exceptions\InsufficientStorage;
 use App\Jobs\UploadExpire;
 use App\Models\Upload;
 use ByteUnits\Binary;
+use ByteUnits\Metric;
 use ByteUnits\System;
 use GuzzleHttp\Psr7\Stream;
 use GuzzleHttp\Psr7\Utils;
@@ -28,6 +30,26 @@ class StorageService
             ->sum('size');
 
         return Binary::bytes($bytes);
+    }
+
+    public function getMaximumCapacity(): System
+    {
+        return Metric::parse(config('upload.max_capacity'));
+    }
+
+    public function getMaximumCapacityPerIp(): System
+    {
+        return Metric::parse(config('upload.max_capacity_per_ip'));
+    }
+
+    public function isMaxCapacityReached(): bool
+    {
+        return $this->calculateStorageUsed()->isGreaterThan($this->getMaximumCapacity());
+    }
+
+    public function isMaxCapacityPerIPReached(string $ip): bool
+    {
+        return $this->calculateStorageUsedPerIp($ip)->isGreaterThan($this->getMaximumCapacityPerIp());
     }
 
     public function calculateStorageUsed(): System
@@ -59,7 +81,16 @@ class StorageService
      */
     public function upload(UploadedFile|Request $file, string $filename, string $ip, ?string $related_session_id): Upload
     {
-        $stream = $file instanceof UploadedFile ? new Stream(fopen($file->getPath(), 'r')) : $this->requestToStream($file);
+        if ($this->isMaxCapacityReached()) {
+            throw new InsufficientStorage('Max capacity reached');
+        }
+
+        if ($this->isMaxCapacityPerIPReached($filename)) {
+            throw new InsufficientStorage('Max capacity per IP address reached');
+        }
+
+        $resource = fopen($file->getRealPath(), 'r+'); // use r+ so the stream is seekable which is required for S3 based drivers
+        $stream = $file instanceof UploadedFile ? new Stream($resource) : $this->requestToStream($file);
 
         if ($stream->getSize() === 0) {
             throw new EmptyFileException;

@@ -1,4 +1,3 @@
-# Dockerfile
 FROM php:8.3-fpm-alpine
 
 ARG IPE_GD_WITHOUTAVIF=1

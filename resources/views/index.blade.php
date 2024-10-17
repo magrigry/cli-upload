@@ -128,7 +128,10 @@
         <ul>
             <li>Expire after 1 hour</li>
             <li>Max file size : {{ $maxSize }}</li>
-            <li>Use your own encryption</li>
+            <li>Global maximum capacity : {{ $maxCapacity }}  </li>
+            <li>Global Current capacity used : {{ $usedCapacity }}</li>
+            <li>Per IP maximum capacity : {{ $maxCapacityPerIP }}  </li>
+            <li>Per IP Capacity used : {{ $usedCapacityPerIP }}</li>
         </ul>
 
         <hr />

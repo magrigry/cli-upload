@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\InsufficientStorage;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -23,8 +24,18 @@ return Application::configure(basePath: dirname(__DIR__))
 
             if ($accepted->first() === 'text/plain') {
 
+                $message = 'Internal Server Error';
+
+                if ($e instanceof NotFoundHttpException) {
+                    $message = '404 Not Found';
+                }
+
+                if ($e instanceof InsufficientStorage) {
+                    $message = 'The server has reached is maximum capacity';
+                }
+
                 return response(
-                    $e instanceof NotFoundHttpException ? '404 Not Found' : 'Internal Server Error',
+                    $message,
                     $e instanceof HttpException ? $e->getStatusCode() : 500,
                     [
                         'Content-Type' => 'text/plain',
