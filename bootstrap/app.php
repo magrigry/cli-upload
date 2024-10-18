@@ -18,21 +18,36 @@ return Application::configure(basePath: dirname(__DIR__))
             TrustProxies::at($trusted_proxies);
         }
 
-        if ($header = config('app.trusted_proxies_header')) {
+        if (config('app.trusted_proxies_header')) {
 
-            $header = match ($header) {
-                'HEADER_X_FORWARDED_AWS_ELB' => Request::HEADER_X_FORWARDED_AWS_ELB,
-                'HEADER_FORWARDED' => Request::HEADER_FORWARDED,
-                'HEADER_X_FORWARDED_FOR' => Request::HEADER_X_FORWARDED_FOR,
-                'HEADER_X_FORWARDED_HOST' => Request::HEADER_X_FORWARDED_HOST,
-                'HEADER_X_FORWARDED_PORT' => Request::HEADER_X_FORWARDED_PORT,
-                'HEADER_X_FORWARDED_PROTO' => Request::HEADER_X_FORWARDED_PROTO,
-                'HEADER_X_FORWARDED_PREFIX' => Request::HEADER_X_FORWARDED_PREFIX,
-                default => null,
-            };
+            $headers = null;
 
-            if ($header) {
-                TrustProxies::withHeaders($header);
+            foreach (config('app.trusted_proxies_header') as $header) {
+
+                $header = match ($header) {
+                    'HEADER_X_FORWARDED_AWS_ELB' => Request::HEADER_X_FORWARDED_AWS_ELB,
+                    'HEADER_FORWARDED' => Request::HEADER_FORWARDED,
+                    'HEADER_X_FORWARDED_FOR' => Request::HEADER_X_FORWARDED_FOR,
+                    'HEADER_X_FORWARDED_HOST' => Request::HEADER_X_FORWARDED_HOST,
+                    'HEADER_X_FORWARDED_PORT' => Request::HEADER_X_FORWARDED_PORT,
+                    'HEADER_X_FORWARDED_PROTO' => Request::HEADER_X_FORWARDED_PROTO,
+                    'HEADER_X_FORWARDED_PREFIX' => Request::HEADER_X_FORWARDED_PREFIX,
+                    default => null,
+                };
+
+                if ($header === null) {
+                    continue;
+                }
+
+                if ($headers) {
+                    $headers = $headers | $header;
+                } else {
+                    $headers = $header;
+                }
+            }
+
+            if ($headers) {
+                TrustProxies::withHeaders($headers);
             }
         }
 

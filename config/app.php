@@ -129,6 +129,10 @@ return [
         ),
     ],
 
-    'trusted_proxies_header' => env('TRUSTED_PROXIES_HEADER'),
+    'trusted_proxies_headers' => [
+        ...array_filter(
+            explode(',', env('TRUSTED_PROXIES_HEADERS', ''))
+        ),
+    ],
 
 ];
