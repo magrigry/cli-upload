@@ -123,12 +123,12 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    'trusted_proxies' => [
+    'trusted_proxies' => env('TRUSTED_PROXIES') === '*' ? '*' : [
         ...array_filter(
             explode(',', env('TRUSTED_PROXIES', ''))
         ),
     ],
 
-    'trust_railway_proxy' => (bool) env('TRUST_RAILWAY_PROXY', false),
+    'trusted_proxies_header' => env('TRUSTED_PROXIES_HEADER'),
 
 ];

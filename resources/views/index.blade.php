@@ -131,7 +131,7 @@
             <li>Global maximum capacity : {{ $maxCapacity }}  </li>
             <li>Global Current capacity used : {{ $usedCapacity }}</li>
             <li>Per IP maximum capacity : {{ $maxCapacityPerIP }}  </li>
-            <li>Per IP Capacity ({{ request()->ip() }} used : {{ $usedCapacityPerIP }}</li>
+            <li>Per IP ({{ request()->ip() }}) Capacity used : {{ $usedCapacityPerIP }}</li>
         </ul>
 
         <hr />

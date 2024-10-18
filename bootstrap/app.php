@@ -6,7 +6,6 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Request as RequestAlias;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -15,14 +14,27 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $trusted_proxies = config('app.trusted_proxies');
 
-        if (count($trusted_proxies) > 0) {
+        if ($trusted_proxies === '*' || count($trusted_proxies) > 0) {
             TrustProxies::at($trusted_proxies);
-        } elseif (config('app.trust_railway_proxy')) {
-            TrustProxies::at(\request()->ip());
-            TrustProxies::withHeaders(RequestAlias::HEADER_X_FORWARDED_FOR);
         }
 
-        TrustProxies::withHeaders(RequestAlias::HEADER_X_FORWARDED_FOR);
+        if ($header = config('app.trusted_proxies_header')) {
+
+            $header = match ($header) {
+                'HEADER_X_FORWARDED_AWS_ELB' => Request::HEADER_X_FORWARDED_AWS_ELB,
+                'HEADER_FORWARDED' => Request::HEADER_FORWARDED,
+                'HEADER_X_FORWARDED_FOR' => Request::HEADER_X_FORWARDED_FOR,
+                'HEADER_X_FORWARDED_HOST' => Request::HEADER_X_FORWARDED_HOST,
+                'HEADER_X_FORWARDED_PORT' => Request::HEADER_X_FORWARDED_PORT,
+                'HEADER_X_FORWARDED_PROTO' => Request::HEADER_X_FORWARDED_PROTO,
+                'HEADER_X_FORWARDED_PREFIX' => Request::HEADER_X_FORWARDED_PREFIX,
+                default => null,
+            };
+
+            if ($header) {
+                TrustProxies::withHeaders($header);
+            }
+        }
 
     })
     ->withRouting(
