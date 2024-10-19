@@ -182,7 +182,7 @@
 
         <p>Short syntax remote based :</p>
         <x-code language="bash">
-            curl -s {{ route('scripts', ['name' => 'curl-openssl-bash']) }} | bash && cliupload your_file.txt
+            curl -fsSL {{ route('scripts', ['name' => 'curl-openssl-bash']) }} | bash && cliupload your_file.txt
         </x-code>
 
     </main>
