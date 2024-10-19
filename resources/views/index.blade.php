@@ -166,7 +166,7 @@
         <h2>Curl with Bash, OpenSSL and aes-256-cbc</h2>
 
         <p>
-           Replace the filename with your filename at the end of the command.
+           Replace <code>your_file.txt</code> with your filename at the end of the command.
         </p>
 
         <details>
@@ -189,7 +189,7 @@
 
         <p>Short syntax remote based :</p>
         <x-code language="bash">
-            curl -fsSL {{ route('scripts', ['name' => 'curl-openssl-bash']) }} | bash && cliupload your_file.txt
+            bash <(curl -fsSL {{ route('scripts', ['name' => 'curl-openssl-bash']) }}) your_file.txt
         </x-code>
 
     </main>

@@ -31,12 +31,15 @@ class WebController
             'maxCapacityPerIP' => $storageService->getMaximumCapacityPerIp()->format(),
             'usedCapacity' => $storageService->calculateStorageUsed()->format(),
             'usedCapacityPerIP' => $storageService->calculateStorageUsedPerIp($request->ip())->format(),
+            'script' => false,
         ]);
     }
 
     public function script(string $script): View|Factory|Application
     {
-        return view("commands.$script");
+        return view("commands.$script", [
+            'script' => true,
+        ]);
     }
 
     public function upload(Request $request, StorageService $storageService): RedirectResponse
