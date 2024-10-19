@@ -15,9 +15,10 @@ It provides a basic interface and API for transferring files between servers, fo
 
 # Production environnement with Docker 
 
-- Clone this project 
-
 ## Building 
+
+Clone the project and build the image 
+
 ```shell 
 docker build -t cliupload .
 ```
