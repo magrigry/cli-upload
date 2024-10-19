@@ -7,6 +7,8 @@
 This project is a minimalistic application designed to facilitate file uploads from one server and file downloads from another. 
 It provides a basic interface and API for transferring files between servers, focusing on simplicity and ease of use.
 
+See a demo here https://cli-upload-production.up.railway.app
+
 # Local development environnement 
 
 - Clone this project
