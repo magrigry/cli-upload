@@ -3,9 +3,9 @@
 namespace App\Jobs;
 
 use App\Models\Upload;
+use App\Services\StorageService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Storage;
 
 class UploadExpire implements ShouldQueue
 {
@@ -15,17 +15,8 @@ class UploadExpire implements ShouldQueue
         private readonly Upload $upload
     ) {}
 
-    public function handle(): void
+    public function handle(StorageService $storageService): void
     {
-        if ($this->upload->deleted) {
-            return;
-        }
-
-        if (Storage::exists($this->upload->getFilePath())) {
-            Storage::delete($this->upload->getFilePath());
-        }
-
-        $this->upload->deleted = true;
-        $this->upload->save();
+        $storageService->delete($this->upload);
     }
 }

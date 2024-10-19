@@ -15,6 +15,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Psr\Http\Message\StreamInterface;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class StorageService
 {
@@ -88,7 +89,9 @@ class StorageService
             throw new InsufficientStorage('Max capacity per IP address reached');
         }
 
-        $stream = $file instanceof UploadedFile ? Utils::streamFor($file->getRealPath()) : $this->requestToStream($file);
+        $stream = $file instanceof UploadedFile
+                                        ? Utils::streamFor(fopen($file->getRealPath(), 'r+'))
+                                        : $this->requestToStream($file);
 
         if ($stream->getSize() === 0) {
             throw new EmptyFileException;
@@ -106,6 +109,32 @@ class StorageService
         Storage::put($upload->getFilePath(), $stream);
 
         return $upload;
+    }
+
+    public function download(Upload $upload, ?string $filename = null): ?StreamedResponse
+    {
+        $filename = $filename ?? $upload->filename;
+        $file = $upload->getFilePath();
+
+        if (! $upload->deleted && Storage::exists($file)) {
+            return Storage::download($file, $filename);
+        }
+
+        return null;
+    }
+
+    public function delete(Upload $upload): void
+    {
+        if ($upload->deleted) {
+            return;
+        }
+
+        if (Storage::exists($upload->getFilePath())) {
+            Storage::delete($upload->getFilePath());
+        }
+
+        $upload->deleted = true;
+        $upload->save();
     }
 
     private function requestToStream(Request $request): StreamInterface

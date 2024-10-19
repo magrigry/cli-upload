@@ -7,7 +7,6 @@ use App\Models\Upload;
 use App\Services\StorageService;
 use ByteUnits\Metric;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use function route;
@@ -29,16 +28,9 @@ class ApiController
         ]);
     }
 
-    public function download(Upload $upload, ?string $filename = null): StreamedResponse
+    public function download(StorageService $storageService, Upload $upload, ?string $filename = null): StreamedResponse
     {
-        $filename = $filename ?? $upload->filename;
-        $file = $upload->getFilePath();
-
-        if (! $upload->deleted && Storage::exists($file)) {
-            return Storage::download($file, $filename);
-        }
-
-        abort(404);
+        return $storageService->download($upload, $filename) ?? abort(404);
     }
 
     public function delete(Upload $upload): void
