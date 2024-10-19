@@ -9,6 +9,7 @@ use App\Models\Upload;
 use ByteUnits\Binary;
 use ByteUnits\Metric;
 use ByteUnits\System;
+use Carbon\Carbon;
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToRetrieveMetadata;
 use Psr\Http\Message\StreamInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class StorageService
@@ -112,7 +114,7 @@ class StorageService
         return $upload;
     }
 
-    public function download(Upload $upload, ?string $filename = null): ?StreamedResponse
+    public function download(Upload $upload, ?string $filename = null): null|StreamedResponse|RedirectResponse
     {
         $filename = $filename ?? $upload->filename;
         $file = $upload->getFilePath();
@@ -121,15 +123,24 @@ class StorageService
             return null;
         }
 
-        $contentType = null;
+        $contentType = 'application/octet-stream';
 
         try {
             $contentType = Storage::mimeType($filename);
         } catch (UnableToRetrieveMetadata) {
         }
 
+        if (config('filesystems.default') === 's3') {
+            return new RedirectResponse(
+                Storage::temporaryUrl($file, Carbon::now()->addMinute(), [
+                    'ResponseContentType' => $contentType,
+                    'ResponseContentDisposition' => "attachment; filename=$filename",
+                ]),
+            );
+        }
+
         return Storage::download($file, $filename, [
-            'Content-Type' => $contentType ?? 'application/octet-stream',
+            'Content-Type' => $contentType,
         ]);
     }
 

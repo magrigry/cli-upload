@@ -7,6 +7,7 @@ use App\Models\Upload;
 use App\Services\StorageService;
 use ByteUnits\Metric;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use function route;
@@ -28,7 +29,7 @@ class ApiController
         ]);
     }
 
-    public function download(StorageService $storageService, Upload $upload, ?string $filename = null): StreamedResponse
+    public function download(StorageService $storageService, Upload $upload, ?string $filename = null): Response
     {
         return $storageService->download($upload, $filename) ?? abort(404);
     }
