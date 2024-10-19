@@ -1,7 +1,7 @@
 # CLI Upload
 
 <p align="center">
-  <img src="https://github.com/magrigry/cliupload/blob/main/public/images/favicon-120x120.png?raw=true" alt="Sublime's custom image"/>
+  <img src="https://github.com/magrigry/cli-upload/blob/main/public/images/favicon-120x120.png?raw=true" alt="Sublime's custom image"/>
 </p>
 
 This project is a minimalistic application designed to facilitate file uploads from one server and file downloads from another. 
