@@ -50,6 +50,15 @@ See the `.env.example` file for a list of usefull environnement variable.
 
 See also `./config/upload.php` for a list of environnement variables that might be use for rate limiting and setting some capacity limits.
 
+### Configuring the max body size / file upload in nginx and PHP
+
+Just pass an `UPLOAD_MAX_SIZE` environnement variable.
+
+e.g. with Docker
+```
+-e UPLOAD_MAX_SIZE=1G
+```
+
 ## Acknowledgments
 
 This project was inspired and made possible by several open-source projects and resources.

@@ -8,6 +8,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions bcmath gd gettext intl mcrypt mysqli opcache pcntl pdo_mysql pdo_pgsql soap sockets redis xsl zip
 
 RUN apk --update add \
+    gettext \
     supervisor \
     nginx &&\
     rm /var/cache/apk/*
@@ -47,7 +48,10 @@ RUN chown www-data:www-data -R /var/www/html/storage
 RUN chmod 755 -R /var/www/html/storage
 
 COPY stubs/nginx /etc/nginx
+RUN mv /etc/nginx/nginx.template.conf /etc/nginx/nginx.conf.template
+
 COPY stubs/php /usr/local/etc
+
 COPY stubs/supervisor /etc/supervisor
 
 RUN mkdir -p /var/run/php
