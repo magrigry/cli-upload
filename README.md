@@ -1,5 +1,9 @@
 # CLI Upload
 
+<p align="center">
+  <img src="https://github.com/magrigry/cliupload/blob/main/public/images/favicon-120x120.png?raw=true" alt="Sublime's custom image"/>
+</p>
+
 This project is a minimalistic application designed to facilitate file uploads from one server and file downloads from another. 
 It provides a basic interface and API for transferring files between servers, focusing on simplicity and ease of use.
 
@@ -47,9 +51,9 @@ docker run -v ./database/database.sqlite:/var/www/html/database/database.sqlite 
 
 ## Environnement variable
 
-See the `.env.example` file for a list of usefull environnement variable.
+See the [.env.example](./.env.example) file for a list of usefull environnement variable.
 
-See also `./config/upload.php` for a list of environnement variables that might be use for rate limiting and setting some capacity limits.
+See also [config/upload](./config/upload.php) for a list of environnement variables that might be use for rate limiting and setting some capacity limits.
 
 ### Configuring the max body size / file upload in Nginx and PHP
 

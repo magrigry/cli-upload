@@ -9,6 +9,8 @@
 
     <link rel="stylesheet" href="{{ asset('/css/pico/pico.classless.min.css') }}">
 
+    <link rel="icon" type="image/x-icon" href="{{ asset('/favicon.ico') }}">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
     <link rel="stylesheet" href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"/>
 
@@ -97,6 +99,11 @@
             /* Original: var(--pico-border-radius) */
         }
 
+        hr {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
     </style>
 
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
@@ -163,11 +170,11 @@
         </p>
 
         <details>
-            <summary><small>Click to see details and non minified version</small></summary>
+            <summary><small>Click here to see details and non minified version</small></summary>
             <p>
                 A oneline bash command that use OpenSSL to encrypt your file and send it to {{ $host }}.
                 It generate a random 256 bits key (which is not send to the server) using <code>$(openssl rand -hex 32)</code>,
-                encrypt your file with the key using <code>OpenSSL</code> and  <code>aes-256-cbc</code>, then send it to the server.
+                encrypt your file with the key using <code>OpenSSL</code> and <code>aes-256-cbc</code>, then send it to the server.
                 The server answer with the download URL and the bash function generate the command to download the file and decrypt it.
                 Using
             </p>
