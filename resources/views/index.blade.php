@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CLI-Upload</title>
 
@@ -11,8 +12,9 @@
 
     <link rel="icon" type="image/x-icon" href="{{ asset('/favicon.ico') }}">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"/>
+{{--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">--}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/an-old-hope.min.css" integrity="sha384-jECk4G9CH/HRhGkMUheeoDd94btueS+LxzL99cgP3S/dCa3Sc/2HOgm4jOzqa3Bo" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css" integrity="sha384-jx4j2QNE8PcYHQikjfTfY6TM0sYVodTr0OGqUfAR6bKYJBgW91lTieqkghTu9+Kk" crossorigin="anonymous">
 
     <style>
 
@@ -106,8 +108,8 @@
 
     </style>
 
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js" integrity="sha384-0/jh9+ifwJ5mqtDZ+DWdwgFjZ8I4HIfXqaWJi2mdeAwy8aUPlw5dTYNsqAqNE4yD" crossorigin="anonymous"></script>
     <script>
         hljs.highlightAll();
         hljs.addPlugin(new CopyButtonPlugin());
@@ -127,24 +129,35 @@
     <main>
         <h1></h1>
         <p>
-            Upload files from command line to easily share between servers.
+            Upload files from command line to easily share between servers with 0 knowledge encryption.
             Inspired from <a href="https://bashupload.com">bashupload</a>.
         </p>
 
-        <p>Limitations</p>
-        <ul>
-            <li>Expire after 1 hour</li>
-            <li>Max file size : {{ $maxSize }}</li>
-            <li>Global maximum capacity : {{ $maxCapacity }}  </li>
-            <li>Global Current capacity used : {{ $usedCapacity }}</li>
-            <li>Per IP maximum capacity : {{ $maxCapacityPerIP }}  </li>
-            <li>Per IP ({{ request()->ip() }}) capacity used : {{ $usedCapacityPerIP }}</li>
-        </ul>
+        <details>
+            <summary>Click here to see limitations</summary>
+            <ul>
+                <li>Expire after 1 hour</li>
+                <li>Max file size : {{ $maxSize }}</li>
+                <li>Global maximum capacity : {{ $maxCapacity }}  </li>
+                <li>Global Current capacity used : {{ $usedCapacity }}</li>
+                <li>Per IP maximum capacity : {{ $maxCapacityPerIP }}  </li>
+                <li>Per IP ({{ request()->ip() }}) capacity used : {{ $usedCapacityPerIP }}</li>
+            </ul>
+        </details>
+
+        <hr />
+
+        <p>
+            Replace <code>your_file.txt</code> with your filename at the end of the command. More details and alternatives below
+        </p>
+        <x-code language="bash">
+            bash <(curl -fsSL {{ route('scripts', ['name' => 'curl-openssl-bash']) }}) your_file.txt
+        </x-code>
 
         <hr />
 
         <article>
-            <h2>From Browser</h2>
+            <h2>From Browser <small>(not encrypted)</small></h2>
             <form action="{{ route('session.upload') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <fieldset role="group">
@@ -165,12 +178,8 @@
 
         <h2>Curl with Bash, OpenSSL and aes-256-cbc</h2>
 
-        <p>
-           Replace <code>your_file.txt</code> with your filename at the end of the command.
-        </p>
-
         <details>
-            <summary><small>Click here to see details and non minified version</small></summary>
+            <summary>Click here to see details and non minified version</summary>
             <p>
                 A oneline bash command that use OpenSSL to encrypt your file and send it to {{ $host }}.
                 It generate a random 256 bits key (which is not send to the server) using <code>$(openssl rand -hex 32)</code>,
@@ -183,6 +192,7 @@
             </x-code>
         </details>
 
+        <p>Long syntax with local script :</p>
         <x-code language="bash" :minify="true">
             @include('commands.curl-openssl-bash') && cliupload your_file.txt
         </x-code>
@@ -192,7 +202,7 @@
             bash <(curl -fsSL {{ route('scripts', ['name' => 'curl-openssl-bash']) }}) your_file.txt
         </x-code>
 
-        <h2>Bash and curl with no encryption</h2>
+        <h2>Bash and curl <small>with no encryption</small></h2>
 
         <x-code language="bash">
             echo "curl -O $(curl {{ urldecode(route('api.upload', ['filename' => ' '])) }} -T your_file.txt)"
