@@ -30,7 +30,8 @@ Use the `-e` flag to pass environnement variables.
 
 The APP_KEY must be 256 bits randomly generated secret string that will be used by the application. 
 
-If you change this application's encryption key, all authenticated user sessions will and some files might not be recoverable.
+If you change this application's encryption key, all authenticated user sessions will reset. 
+It might also have some others impact in futur release (e.g. some files could not be recoverable).
 
 ### Mounting 
 
@@ -50,7 +51,7 @@ See the `.env.example` file for a list of usefull environnement variable.
 
 See also `./config/upload.php` for a list of environnement variables that might be use for rate limiting and setting some capacity limits.
 
-### Configuring the max body size / file upload in nginx and PHP
+### Configuring the max body size / file upload in Nginx and PHP
 
 Just pass an `UPLOAD_MAX_SIZE` environnement variable.
 

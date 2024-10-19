@@ -57,7 +57,7 @@ COPY stubs/supervisor /etc/supervisor
 RUN mkdir -p /var/run/php
 
 RUN echo 'LOG_CHANNEL=stderr' >> .env
-RUN echo 'LOG_LEVEL=debug' >> .env
+RUN echo 'LOG_LEVEL=error' >> .env
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

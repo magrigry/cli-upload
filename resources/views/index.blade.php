@@ -113,7 +113,7 @@
                 <li><h1>CLI Upload</h1></li>
             </ul>
             <ul>
-                <li><a href="#" class="contrast">Github</a></li>
+                <li><a href="https://github.com/magrigry/cli-upload" class="contrast">Github</a></li>
             </ul>
         </nav>
     </header>
@@ -131,7 +131,7 @@
             <li>Global maximum capacity : {{ $maxCapacity }}  </li>
             <li>Global Current capacity used : {{ $usedCapacity }}</li>
             <li>Per IP maximum capacity : {{ $maxCapacityPerIP }}  </li>
-            <li>Per IP ({{ request()->ip() }}) Capacity used : {{ $usedCapacityPerIP }}</li>
+            <li>Per IP ({{ request()->ip() }}) capacity used : {{ $usedCapacityPerIP }}</li>
         </ul>
 
         <hr />
