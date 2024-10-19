@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToRetrieveMetadata;
 use Psr\Http\Message\StreamInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -116,11 +117,20 @@ class StorageService
         $filename = $filename ?? $upload->filename;
         $file = $upload->getFilePath();
 
-        if (! $upload->deleted && Storage::exists($file)) {
-            return Storage::download($file, $filename);
+        if ($upload->deleted || Storage::missing($file)) {
+            return null;
         }
 
-        return null;
+        $contentType = null;
+
+        try {
+            $contentType = Storage::mimeType($filename);
+        } catch (UnableToRetrieveMetadata) {
+        }
+
+        return Storage::download($file, $filename, [
+            'Content-Type' => $contentType ?? 'application/octet-stream',
+        ]);
     }
 
     public function delete(Upload $upload): void
