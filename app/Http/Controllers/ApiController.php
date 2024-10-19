@@ -8,7 +8,6 @@ use App\Services\StorageService;
 use ByteUnits\Metric;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use function route;
 
