@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(ApiController::class)->group(function () {
 
-    Route::put('/{filename}', 'upload')
+    Route::put('/{filename?}', 'upload')
         ->name('api.upload')
         ->middleware(['throttle:upload']);
 

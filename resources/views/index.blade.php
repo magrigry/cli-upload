@@ -192,6 +192,12 @@
             bash <(curl -fsSL {{ route('scripts', ['name' => 'curl-openssl-bash']) }}) your_file.txt
         </x-code>
 
+        <h2>Bash and curl with no encryption</h2>
+
+        <x-code language="bash">
+            echo "curl -O $(curl {{ urldecode(route('api.upload', ['filename' => ' '])) }} -T your_file.txt)"
+        </x-code>
+
     </main>
 </body>
 </html>
